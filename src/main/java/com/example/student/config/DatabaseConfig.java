@@ -35,10 +35,13 @@ public class DatabaseConfig {
             password = props.getProperty("db.password");
 
 
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
         } catch (IOException e) {
             logger.error("Error loading database configuration", e);
             throw new RuntimeException("Error loading database configuration", e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
