@@ -2,6 +2,7 @@ package com.example.student.model;
 
 import lombok.Data;
 import lombok.Builder;
+import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -11,7 +12,8 @@ import java.time.format.DateTimeFormatter;
 @Data
 @Builder
 public class Student {
-    private final int id;
+    @Setter
+    private int id;
 
     @NotBlank(message = "Name cannot be blank")
     private String name;
@@ -67,6 +69,10 @@ public class Student {
         this.updatedBy = updatedBy;
     }
 
+    public Student(){
+
+    }
+
 
     @Override
     public String toString() {
@@ -80,4 +86,5 @@ public class Student {
                 updatedAt != null ? updatedAt.format(dateTimeFormatter) : null,
                 createdBy, updatedBy);
     }
+
 }
