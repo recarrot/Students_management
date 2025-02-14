@@ -184,33 +184,39 @@ public class StudentDaoTest {
 
     @Test
     public void testGetStudentByName() throws DaoException{
-        studentDao.findByName("张三");
+        List<Student> students = studentDao.findByName("张三");
+        System.out.print(students.get(1).toString());
     }
 
     @Test
     public void testGetStudentByMajor() throws DaoException{
-        studentDao.findByMajor("三年级");
+        List<Student> students = studentDao.findByMajor("三年级");
+        System.out.print(students.get(1).toString());
     }
 
     @Test
     public void testGetStudentByGender() throws DaoException{
-        studentDao.findByGender("男");
+        List<Student> students = studentDao.findByGender("男");
+        System.out.print(students.get(1).toString());
     }
 
     @Test
     public void testGetStudentsByFirstDate() throws DaoException {
-        studentDao.findByFirstDate(LocalDate.of(2024,1,1));
+        List<Student> students = studentDao.findByFirstDate(LocalDate.of(2024,1,1));
+        System.out.print(students.get(1).toString());
     }
 
     @Test
     public void testGetStudentByLastDate() throws DaoException{
-        studentDao.findByLastDate(LocalDate.of(2025,12,12));
+        List<Student> students = studentDao.findByLastDate(LocalDate.of(2025,12,12));
+        System.out.print(students.get(1).toString());
     }
 
     @Test
     public void testGetStudentByDateRange() throws DaoException{
-        studentDao.findByDateRange(
+        List<Student> students = studentDao.findByDateRange(
                 LocalDate.of(2024,1,1),
                 LocalDate.of(2025,12,12));
+        System.out.print(students.get(1).toString());
     }
 }

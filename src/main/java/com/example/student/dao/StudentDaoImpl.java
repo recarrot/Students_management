@@ -1,6 +1,7 @@
 package com.example.student.dao;
 
 import com.example.student.config.DatabaseConfig;
+import com.example.student.dto.StudentQuery;
 import com.example.student.model.Student;
 
 import java.sql.*;
@@ -10,6 +11,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.validation.constraints.Null;
 
 public class StudentDaoImpl implements StudentDao {
     private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
@@ -285,6 +288,44 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException("查询学生失败",e);
         }
         return students;
+    }
+
+    public List<Student> findByQuery(StudentQuery query){
+        StringBuilder sql = new StringBuilder("SELECT * FROM student WHERE 1=1");
+
+        if (query.getId() != null) {
+            sql.append(" AND id = ?");
+        }
+        if (query.getName() != null) {
+            sql.append(" AND name LIKE ?");
+        }
+        if(query.getAgeMin() != null){
+            sql.append(" AND age >= ?");
+        }
+        if(query.getAgeMax() != null){
+            sql.append(" AND age <= ?");
+        }
+        if(query.getGender() != null){
+            sql.append(" AND age = ?");
+        }
+        if(query.getMajor() != null){
+            sql.append(" AND major = ?");
+        }
+        // 其他条件...
+
+        // 添加排序
+        if (query.getSortBy() != null) {
+            sql.append(" ORDER BY ").append(query.getSortBy())
+                    .append(query.isAscending() ? " ASC" : " DESC");
+        }
+
+        // 添加分页
+        if (query.getPageNum() != null && query.getPageSize() != null) {
+            int offset = (query.getPageNum() - 1) * query.getPageSize();
+            sql.append(" LIMIT ").append(offset).append(",").append(query.getPageSize());
+        }
+
+        // 执行查询...
     }
 
     public List<Student> findByFirstDate(LocalDate firstDate) throws DaoException {

@@ -1,5 +1,6 @@
 package com.example.student.dao;
 
+import com.example.student.dto.StudentQuery;
 import com.example.student.model.Student;
 
 import java.time.LocalDate;
@@ -17,4 +18,5 @@ public interface StudentDao {
     List<Student> findByMajor(String major) throws DaoException;
     List<Student> findByGender(String gender) throws DaoException;
     List<Student> findByEnrollmentDate(LocalDate firstDate,LocalDate lastDate) throws DaoException;
+    List<Student> findByQuery(StudentQuery query);
 }
