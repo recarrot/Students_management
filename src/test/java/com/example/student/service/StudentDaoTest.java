@@ -1,10 +1,9 @@
 package com.example.student.service;
 
-import com.example.student.dao.StudentDao;
+import com.example.student.dao.DaoException;
 import com.example.student.dao.StudentDaoImpl;
 import com.example.student.model.Student;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,10 +24,18 @@ public class StudentDaoTest {
         student.setMajor("计算机科学");
         student.setEnrollmentDate(LocalDate.now());
 
-        studentDao.addStudent(student);
+        try {
+            studentDao.insert(student);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
-        assertNotNull("学生ID应为非空", student.getId());
-        Student fetchedStudent = studentDao.getStudentById(student.getId());
+        Student fetchedStudent;
+        try {
+            fetchedStudent = studentDao.findById(student.getId());
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
         assertNotNull( "获取的学生不应为空",fetchedStudent);
         String name =fetchedStudent.getName();
         assertEquals("学生姓名应匹配", "张三", name);
@@ -43,13 +50,26 @@ public class StudentDaoTest {
         student.setMajor("软件工程");
         student.setEnrollmentDate(LocalDate.now());
 
-        studentDao.addStudent(student);
+        try {
+            studentDao.insert(student);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
         student.setName("王五");
         student.setAge(23);
-        studentDao.updateStudent(student);
+        try {
+            studentDao.update(student);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
-        Student updatedStudent = studentDao.getStudentById(student.getId());
+        Student updatedStudent;
+        try {
+            updatedStudent = studentDao.findById(student.getId());
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
         assertNotNull("更新后的学生不应为空",updatedStudent);
         assertEquals("学生姓名应更新为 '王五'","王五", updatedStudent.getName() );
         assertEquals("学生年龄应更新为 23", 23, updatedStudent.getAge());
@@ -64,12 +84,25 @@ public class StudentDaoTest {
         student.setMajor("信息安全");
         student.setEnrollmentDate(LocalDate.now());
 
-        studentDao.addStudent(student);
+        try {
+            studentDao.insert(student);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
         int studentId = student.getId();
-        studentDao.deleteStudent(studentId);
+        try {
+            studentDao.delete(studentId);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
-        Student deletedStudent = studentDao.getStudentById(studentId);
+        Student deletedStudent;
+        try {
+            deletedStudent = studentDao.findById(studentId);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
         assertNull("删除后的学生应为空", deletedStudent );
     }
 
@@ -82,9 +115,18 @@ public class StudentDaoTest {
         student.setMajor("人工智能");
         student.setEnrollmentDate(LocalDate.now());
 
-        studentDao.addStudent(student);
+        try {
+            studentDao.insert(student);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
-        Student fetchedStudent = studentDao.getStudentById(student.getId());
+        Student fetchedStudent;
+        try {
+            fetchedStudent = studentDao.findById(student.getId());
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
         assertNotNull("获取的学生不应为空",fetchedStudent );
         assertEquals("学生姓名应匹配","孙七", fetchedStudent.getName() );
     }
@@ -92,9 +134,18 @@ public class StudentDaoTest {
     @Test
     public void testGetAllStudents() {
         // 清空数据库中的学生数据（可选）
-        List<Student> students = studentDao.getAllStudents();
+        List<Student> students;
+        try {
+            students = studentDao.findAll();
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
         for (Student s : students) {
-            studentDao.deleteStudent(s.getId());
+            try {
+                studentDao.delete(s.getId());
+            } catch (com.example.student.dao.DaoException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Student student1 = new Student();
@@ -111,10 +162,55 @@ public class StudentDaoTest {
         student2.setMajor("网络安全");
         student2.setEnrollmentDate(LocalDate.now());
 
-        studentDao.addStudent(student1);
-        studentDao.addStudent(student2);
+        try {
+            studentDao.insert(student1);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            studentDao.insert(student2);
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
 
-        List<Student> allStudents = studentDao.getAllStudents();
+        List<Student> allStudents;
+        try {
+            allStudents = studentDao.findAll();
+        } catch (com.example.student.dao.DaoException e) {
+            throw new RuntimeException(e);
+        }
         assertEquals("学生列表应包含 2 名学生",2, allStudents.size() );
+    }
+
+    @Test
+    public void testGetStudentByName() throws DaoException{
+        studentDao.findByName("张三");
+    }
+
+    @Test
+    public void testGetStudentByMajor() throws DaoException{
+        studentDao.findByMajor("三年级");
+    }
+
+    @Test
+    public void testGetStudentByGender() throws DaoException{
+        studentDao.findByGender("男");
+    }
+
+    @Test
+    public void testGetStudentsByFirstDate() throws DaoException {
+        studentDao.findByFirstDate(LocalDate.of(2024,1,1));
+    }
+
+    @Test
+    public void testGetStudentByLastDate() throws DaoException{
+        studentDao.findByLastDate(LocalDate.of(2025,12,12));
+    }
+
+    @Test
+    public void testGetStudentByDateRange() throws DaoException{
+        studentDao.findByDateRange(
+                LocalDate.of(2024,1,1),
+                LocalDate.of(2025,12,12));
     }
 }

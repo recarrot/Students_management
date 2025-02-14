@@ -59,10 +59,10 @@ public class Student {
                    String createdBy, String updatedBy) {
         this.id = id;
         this.name = name;
-        this.gender = gender;
+        this.gender = gender; //性别
         this.age = age;
         this.major = major;
-        this.enrollmentDate = enrollmentDate;
+        this.enrollmentDate = enrollmentDate; //入学日期
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.createdBy = createdBy;
